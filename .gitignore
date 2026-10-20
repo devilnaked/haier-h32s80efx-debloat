@@ -1,0 +1,11 @@
+# Device-specific backups contain the TV's name, serials and settings: never publish them
+backup/
+# Working screenshots (some show the Google account avatar); curated ones live in docs/screenshots
+shots/
+
+# Build output
+launcher/.gradle/
+launcher/app/build/
+launcher/build/
+launcher/local.properties
+*.apk

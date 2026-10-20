@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dock apps, left to right. Package names; missing or disabled ones are skipped. -->
+    <string-array name="dock_packages">
+        <item>com.google.android.youtube.tv</item>
+        <item>com.netflix.ninja</item>
+        <item>com.disney.disneyplus</item>
+        <item>com.ais.mimo.aisplay.tv</item>
+    </string-array>
+
+    <!-- Wallpaper: put an image at res/drawable-nodpi/wallpaper.jpg and set this to true.
+         false = pitch black background. -->
+    <bool name="use_wallpaper">false</bool>
+    <!-- 0..255: how much black is laid over the wallpaper so text stays readable -->
+    <integer name="wallpaper_dim">110</integer>
+</resources>

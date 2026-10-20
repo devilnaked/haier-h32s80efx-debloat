@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The TV app that plays HDMI / AV / tuner. Inputs are opened in it explicitly, because
+         other apps (TrueID) also claim channel VIEW intents. -->
+    <string name="tv_app_package">com.mediatek.wwtv.tvcenter</string>
+    <string name="tv_app_activity">com.mediatek.wwtv.tvcenter.nav.TurnkeyUiMainActivity</string>
+</resources>
