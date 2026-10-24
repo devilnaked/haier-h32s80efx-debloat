@@ -1,3 +1,10 @@
 plugins {
     id 'com.android.application' version '8.5.2' apply false
 }
+
+// Build output can live outside the project (e.g. when the project sits in a synced OneDrive folder
+// that locks files mid-build). tools/build-install.ps1 sets this.
+def outDir = System.getenv('ATVHOME_BUILD_DIR')
+if (outDir) {
+    allprojects { layout.buildDirectory = file("${outDir}/${project.name}") }
+}

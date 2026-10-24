@@ -15,10 +15,15 @@ $env:ANDROID_HOME = "$Tools\android-sdk"
 $gradle = (Get-ChildItem "$Tools\gradle" -Directory | Select-Object -First 1).FullName + "\bin\gradle.bat"
 "sdk.dir=$($env:ANDROID_HOME -replace '\\', '\\')" | Out-File -Encoding ascii "$proj\local.properties"
 
+# Build output and Gradle's project cache go outside the project: a synced folder (OneDrive)
+# locks files while Gradle rewrites them and the build fails.
+$out = "$Tools\atvhome-build"
+$env:ATVHOME_BUILD_DIR = $out
+
 Push-Location $proj
-try { & $gradle --no-daemon -q assembleDebug; if ($LASTEXITCODE -ne 0) { throw "Gradle build failed" } }
+try { & $gradle --no-daemon -q --project-cache-dir "$out\.gradle" assembleDebug; if ($LASTEXITCODE -ne 0) { throw "Gradle build failed" } }
 finally { Pop-Location }
-$apk = "$proj\app\build\outputs\apk\debug\app-debug.apk"
+$apk = "$out\app\outputs\apk\debug\app-debug.apk"
 Write-Host "Built $apk ($([math]::Round((Get-Item $apk).Length / 1KB)) KB)"
 if ($NoInstall) { return }
 

@@ -106,7 +106,7 @@ and firmware), the keyboard, Play Store and Play Services.
 - One translucent glass highlight that springs between tiles; the focused tile scales up and shows its name.
 - The focused dock app's name above the dock, with a glow in a colour sampled from its banner.
 - Top bar: **Inputs** (HDMI 1–3, AV, Live TV through the TV input framework), **Network** (Wi-Fi name or
-  "Ethernet"), **Settings**. Greeting, thin clock and date in [Outfit](https://fonts.google.com/specimen/Outfit) (SIL OFL).
+  "Ethernet"), **Settings**. Greeting, thin clock and date in [Outfit](https://fonts.google.com/specimen/Outfit) (SIL OFL). Icons: [Material Symbols](https://fonts.google.com/icons) (Apache 2.0).
 - Deterministic D-pad: Up/Down move exactly one row, Up from the dock goes to the top bar, the ends of the
   top bar don't fall through, and the last focused tile is remembered.
 - No blur, video or polling; about 48 MB of RAM.

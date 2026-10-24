@@ -3,6 +3,9 @@ backup/
 # Working screenshots (some show the Google account avatar); curated ones live in docs/screenshots
 shots/
 
+# Draft of the contribution to Gathin23/cleanyourtv
+upstream-pr/
+
 # Build output
 launcher/.gradle/
 launcher/app/build/

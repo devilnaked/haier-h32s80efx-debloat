@@ -14,6 +14,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.media.tv.TvContract;
 import android.media.tv.TvInputInfo;
@@ -313,11 +314,14 @@ public class MainActivity extends Activity {
         pillRow.setOrientation(LinearLayout.HORIZONTAL);
         pillRow.setClipChildren(false);
         String[] names = {"Inputs", "Network", "Settings"};
+        int[] icons = {R.drawable.ic_input, R.drawable.ic_ethernet, R.drawable.ic_settings};
         for (int i = 0; i < names.length; i++) {
             TextView p = text(regular, 14, Color.WHITE);
             p.setText(names[i]);
             p.setGravity(Gravity.CENTER);
-            p.setPadding(px(18), 0, px(18), 0);
+            p.setPadding(px(14), 0, px(18), 0);
+            p.setCompoundDrawablePadding(px(8));
+            setIcon(p, icons[i], 17);
             GradientDrawable bg = new GradientDrawable();
             bg.setCornerRadius(px(18));
             bg.setColor(0x29FFFFFF);
@@ -742,11 +746,12 @@ public class MainActivity extends Activity {
                 boolean connected = tim.getInputState(info.getId()) != TvInputManager.INPUT_STATE_DISCONNECTED;
                 String label = type == TvInputInfo.TYPE_COMPOSITE && label(info).toLowerCase().contains("composite") ? "AV" : label(info);
                 Uri uri = TvContract.buildChannelUriForPassthroughInput(info.getId());
-                addMenuRow(label, connected, () -> openInTvApp(uri));
+                int icon = type == TvInputInfo.TYPE_HDMI ? R.drawable.ic_hdmi : R.drawable.ic_av;
+                addMenuRow(label, icon, connected, () -> openInTvApp(uri));
             }
         }
         final String tunerId = tuner;
-        addMenuRow("Live TV", true, () -> openInTvApp(tunerId == null ? null : TvContract.buildChannelsUriForInput(tunerId)));
+        addMenuRow("Live TV", R.drawable.ic_livetv, true,() -> openInTvApp(tunerId == null ? null : TvContract.buildChannelsUriForInput(tunerId)));
     }
 
     private static int tunerRank(String id) {
@@ -763,11 +768,13 @@ public class MainActivity extends Activity {
         return String.valueOf(c != null && c.length() > 0 ? c : info.loadLabel(this));
     }
 
-    private void addMenuRow(String label, boolean connected, Runnable action) {
+    private void addMenuRow(String label, int icon, boolean connected, Runnable action) {
         TextView t = text(regular, 15, Color.WHITE);
         t.setText(label);
         t.setGravity(Gravity.CENTER_VERTICAL);
-        t.setPadding(px(16), 0, px(16), 0);
+        t.setPadding(px(14), 0, px(16), 0);
+        t.setCompoundDrawablePadding(px(12));
+        setIcon(t, icon, 20);
         t.setAlpha(connected ? 1f : 0.45f);
         menu.addView(t, new LinearLayout.LayoutParams(MATCH, px(42)));
         menuRows.add(t);
@@ -789,31 +796,42 @@ public class MainActivity extends Activity {
             @Override
             public void onCapabilitiesChanged(@NonNull Network n, @NonNull NetworkCapabilities caps) {
                 String name = "Connected";
+                int icon = R.drawable.ic_ethernet;
                 if (caps.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
                     name = "Ethernet";
                 } else if (caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
                     name = "Wi-Fi";
+                    icon = R.drawable.ic_wifi;
                     if (caps.getTransportInfo() instanceof WifiInfo) {
                         String ssid = ((WifiInfo) caps.getTransportInfo()).getSSID();
                         if (ssid != null && !ssid.contains("unknown ssid")) name = ssid.replace("\"", "");
                     }
                 }
                 final String label = name;
-                runOnUiThread(() -> setNetworkLabel(label));
+                final int labelIcon = icon;
+                runOnUiThread(() -> setNetworkLabel(label, labelIcon));
             }
 
             @Override
             public void onLost(@NonNull Network n) {
-                runOnUiThread(() -> setNetworkLabel("Offline"));
+                runOnUiThread(() -> setNetworkLabel("Offline", R.drawable.ic_ethernet));
             }
         };
         cm.registerDefaultNetworkCallback(netCallback);
     }
 
-    private void setNetworkLabel(String s) {
+    private void setNetworkLabel(String s, int icon) {
         if (s.equals(pills[1].getText().toString())) return;
         pills[1].setText(s);
+        setIcon(pills[1], icon, 17);
         pills[1].post(() -> glass.follow());
+    }
+
+    /** Puts a white vector icon in front of the text, at a fixed size. */
+    private void setIcon(TextView t, int res, int sizeDp) {
+        Drawable d = getDrawable(res).mutate();
+        d.setBounds(0, 0, px(sizeDp), px(sizeDp));
+        t.setCompoundDrawablesRelative(d, null, null, null);
     }
 
     private void updateGreeting() {
